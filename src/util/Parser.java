@@ -10,8 +10,8 @@ public class Parser {
     private char[] symbolSet;
     private List<String> vertexes;
     private List<String> searchOperations;
-    private List<String> edges;
-    private List<String> shortestPathOperations;
+    private List<String[]> edges;
+    private List<String[]> shortestPathOperations;
     private String[] identifiers;
     private String stateFlag;
 
@@ -19,8 +19,8 @@ public class Parser {
         this.fileHandler = fileHandler;
         this.vertexes = new ArrayList<String>();
         this.searchOperations = new ArrayList<String>();
-        this.edges = new ArrayList<String>();
-        this.shortestPathOperations = new ArrayList<String>();
+        this.edges = new ArrayList<String[]>();
+        this.shortestPathOperations = new ArrayList<String[]>();
         this.symbolSet = new char[] {
             'a','b','c','d','e',
             'f','g','h','i','j',
@@ -58,13 +58,17 @@ public class Parser {
                             this.vertexes.add(currentLine);
                             break;
                         case "Edges:":
-                            this.edges.add(currentLine);
+                            this.edges.add(getTokens(currentLine));
                             break;
                         case "Searches:":
                             this.searchOperations.add(currentLine);
                             break;
                         case "Shortests:":
-                            this.shortestPathOperations.add(currentLine);
+                            String[] cacetinho = getTokens(currentLine);
+                            for (String s: cacetinho) {
+                                System.out.println(s);
+                            }
+                            this.shortestPathOperations.add(getTokens(currentLine));
                             break;
                         default:
                             break;
@@ -72,6 +76,10 @@ public class Parser {
                 }
             }
         }
+    }
+
+    public String[] getTokens(String currentLine) {
+        return currentLine.split("(->|[()])");
     }
 
     public String getIdentifier(String currentLine) {
@@ -107,7 +115,7 @@ public class Parser {
         return this.vertexes;
     }
 
-    public List<String> getGraphEdges() {
+    public List<String[]> getGraphEdges() {
         return this.edges;
     }
 
@@ -115,7 +123,7 @@ public class Parser {
         return this.searchOperations;
     }
 
-    public List<String> getGraphShortestsPathOperations() {
+    public List<String[]> getGraphShortestsPathOperations() {
         return this.shortestPathOperations;
     }
 }

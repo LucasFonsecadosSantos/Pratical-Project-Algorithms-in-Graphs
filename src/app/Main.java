@@ -17,5 +17,10 @@ public class Main {
             parser.getGraphVertexes(),
             parser.getGraphEdges()
         );
+        System.out.println(graph.getEntryAverageDegree());
+        System.out.println(graph.getExitAverageDegree());
+        System.out.println();
+        System.out.println();
+        System.out.println(graph.toString());
     }
 }

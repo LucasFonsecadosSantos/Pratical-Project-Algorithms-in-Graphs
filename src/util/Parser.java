@@ -64,10 +64,6 @@ public class Parser {
                             this.searchOperations.add(currentLine);
                             break;
                         case "Shortests:":
-                            String[] cacetinho = getTokens(currentLine);
-                            for (String s: cacetinho) {
-                                System.out.println(s);
-                            }
                             this.shortestPathOperations.add(getTokens(currentLine));
                             break;
                         default:

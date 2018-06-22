@@ -4,7 +4,9 @@ import dao.FileHandler;
 import java.util.ArrayList;
 import java.util.List;
 import util.Parser;
+import entity.DepthFirstSearch;
 import entity.Graph;
+import entity.GraphCharacteristicsEnum;
 
 public class Main {
 
@@ -17,10 +19,12 @@ public class Main {
             parser.getGraphVertexes(),
             parser.getGraphEdges()
         );
-        System.out.println(graph.getEntryAverageDegree());
-        System.out.println(graph.getExitAverageDegree());
+        System.out.println("GME=" + graph.getEntryAverageDegree());
+        System.out.println("GMS=" +graph.getExitAverageDegree());
+        System.out.println(graph.getGraphCharacteristic());
         System.out.println();
         System.out.println();
+        DepthFirstSearch.ExecDepthFirstSearch(graph);
         System.out.println(graph.toString());
     }
 }

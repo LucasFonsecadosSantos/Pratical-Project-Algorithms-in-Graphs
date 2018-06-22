@@ -19,6 +19,18 @@ public class Graph {
         generateAdjacencyList(edgeSet);
     }
 
+    public List getVertexSet() {
+        return this.vertexSet;
+    }
+
+    public GraphCharacteristicsEnum getGraphCharacteristic() {
+        if (this.edgeSetCardinality < Math.pow(this.vertexSetCardinality, 2)*10) {
+            return GraphCharacteristicsEnum.SCATTERED_GRAPH;
+        } else {
+            return GraphCharacteristicsEnum.DENSE_GRAPH;
+        }
+    }
+
     public void setVertexSet(List<String> vertexSet) {
         this.vertexSet = vertexSet;
     }
@@ -78,11 +90,11 @@ public class Graph {
         return counter;
     }
 
-    private String mappingToVertexOfVertexSet(int index) {
+    public String mappingToVertexOfVertexSet(int index) {
         return this.vertexSet.get(index);
     }
 
-    private int mappingToIndexOfVertexSet(String targetVertex) {
+    public int mappingToIndexOfVertexSet(String targetVertex) {
         int index=0;
         for (String vertex : this.vertexSet) {
             if (vertex.equals(targetVertex)) {
@@ -125,5 +137,9 @@ public class Graph {
             builder.append("\n");
         }
         return builder.toString();
+    }
+
+    public List getAdjacencyList() {
+        return this.adjacencyList;
     }
 }

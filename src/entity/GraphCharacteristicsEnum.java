@@ -7,5 +7,7 @@ public enum GraphCharacteristicsEnum {
     SCATTERED_GRAPH,
     DENSE_GRAPH,
     VERTEX_FOUND,
-    VERTEX_NOT_FOUND
+    VERTEX_NOT_FOUND,
+    HAS_CYCLE,
+    HAS_NO_CYCLE
 }

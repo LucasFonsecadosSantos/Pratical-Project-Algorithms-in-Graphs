@@ -25,6 +25,6 @@ public class Main {
         System.out.println();
         System.out.println();
         DepthFirstSearch.ExecDepthFirstSearch(graph);
-        System.out.println(graph.toString());
+        //System.out.println(graph.toString());
     }
 }

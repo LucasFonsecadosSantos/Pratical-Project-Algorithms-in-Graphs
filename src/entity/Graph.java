@@ -44,7 +44,8 @@ public class Graph {
     }
 
     public void adjacencyListInitialize() {
-        for (int i=0 ; i < this.vertexSetCardinality ; i++) {
+        int cardinality = this.vertexSetCardinality;
+        for (int i=0 ; i < cardinality ; ++i) {
             this.adjacencyList.add(null);
         }
     }
@@ -57,9 +58,11 @@ public class Graph {
         this.edgeSetCardinality = size;
     }
 
-    public void generateAdjacencyList(List<String[]> edgeSet) {
-        for (int i=0; i<this.edgeSetCardinality; i++) {
-            int index = mappingToIndexOfVertexSet(edgeSet.get(i)[0]);
+    private void generateAdjacencyList(List<String[]> edgeSet) {
+        int cardinality = this.edgeSetCardinality;
+        int index;
+        for (int i=0; i<cardinality; ++i) {
+            index = mappingVertexToIndex(edgeSet.get(i)[0]);
             if (this.adjacencyList.get(index) == null) {
                 this.adjacencyList.set(index, new ArrayList<AdjacencyTuple>());
             }
@@ -68,7 +71,7 @@ public class Graph {
     }
 
     private int getExitDegree(String targetVertex) {
-        int index = mappingToIndexOfVertexSet(targetVertex);
+        int index = mappingVertexToIndex(targetVertex);
         List<AdjacencyTuple> tupleList = this.adjacencyList.get(index);
         if (tupleList != null) {
             return tupleList.size();
@@ -76,6 +79,13 @@ public class Graph {
         return 0;
     }
 
+    /**
+     * This method is responsible for gets the vertex entry
+     * degree value, that is, the amount of edges that fall on it.
+     * 
+     * @param vertex The researched vertex.
+     * @return int Amount of incident edges.
+     */
     private int getEntryDegree(String vertex) {
         int counter=0;
         for (List<AdjacencyTuple> tupleList : this.adjacencyList) {
@@ -90,19 +100,12 @@ public class Graph {
         return counter;
     }
 
-    public String mappingToVertexOfVertexSet(int index) {
+    public String mappingIndexToVertex(int index) {
         return this.vertexSet.get(index);
     }
 
-    public int mappingToIndexOfVertexSet(String targetVertex) {
-        int index=0;
-        for (String vertex : this.vertexSet) {
-            if (vertex.equals(targetVertex)) {
-                break;
-            }
-            ++index;
-        }
-        return index;
+    public int mappingVertexToIndex(String targetVertex) {
+        return this.vertexSet.indexOf(targetVertex);
     }
 
     public float getEntryAverageDegree() {
@@ -126,15 +129,17 @@ public class Graph {
         StringBuilder builder = new StringBuilder();
         int index=0;
         for (List<AdjacencyTuple> tupleList : this.adjacencyList) {
-            
+            builder.append(vertexSet.get(index));
             if (tupleList != null) {
                 for (AdjacencyTuple tuple : tupleList) {
                     builder.append("->"+tuple.getVertex());
                 }
+                builder.append("->#");
             }else {
-                builder.append("-");
+                builder.append("->#");
             }
             builder.append("\n");
+            ++index;
         }
         return builder.toString();
     }

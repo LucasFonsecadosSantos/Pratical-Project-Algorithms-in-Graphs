@@ -19,11 +19,17 @@ public class DepthFirstSearch {
     private static int time;
     private static int pre;
 
-    public DepthFirstSearch() {
-        
+    private static void initializeDataStructures() {
+        for (String vertex : vertexSet) {
+            whiteVertexes.add(true);
+            grayVertexes.add(false);
+            blackVertexes.add(false);
+            discoveryTime.add(null);
+            finishTime.add(null);
+        }
     }
 
-    public static void ExecDepthFirstSearch(Graph graph) {
+    private static void instantiateObjects(Graph graph) {
         finishTime = new ArrayList<TimeTuple>();
         discoveryTime= new ArrayList<TimeTuple>();
         whiteVertexes = new ArrayList<Boolean>();
@@ -33,22 +39,17 @@ public class DepthFirstSearch {
         visited = new ArrayList<Integer>();
         adjacencyList = graph.getAdjacencyList();
         vertexSet = graph.getVertexSet();
+    }
+    public static void ExecDepthFirstSearch(Graph graph) {
         List<AdjacencyTuple> adjacencyVertexes;
         int vertexIndex = 0;
+        int currentVertex = 0;
         boolean occurrency = false;
         time = 0;
+        instantiateObjects(graph);
+        initializeDataStructures();
 
-        for (String vertex : vertexSet) {
-            whiteVertexes.add(true);
-            grayVertexes.add(false);
-            blackVertexes.add(false);
-            discoveryTime.add(null);
-            finishTime.add(null);
-        }
-
-        int currentVertex = 0;
         parents.push(currentVertex);
-    
         while (!parents.empty()) {
             
             
@@ -61,14 +62,15 @@ public class DepthFirstSearch {
             
             if (adjacencyVertexes != null && adjacencyVertexes.size() > 0) {
                 for (AdjacencyTuple tuple : adjacencyVertexes) {
-                    vertexIndex = vertexSet.indexOf(tuple.getVertex());
+                    vertexIndex = graph.mappingVertexToIndex(tuple.getVertex());
                     
-                    if (whiteVertexes.get(vertexIndex)) {
+                    if (whiteVertexes.get(vertexIndex) && !grayVertexes.get(vertexIndex)) {
                         occurrency = true;
                         grayVertexes.set(vertexIndex, true);
                         whiteVertexes.set(vertexIndex, false);
                         time++;
                         discoveryTime.add(new TimeTuple(vertexSet.get(vertexIndex), time));
+                        System.out.println(vertexSet.get(vertexIndex));
                         parents.push(vertexIndex);
                     }
                 }
@@ -77,9 +79,10 @@ public class DepthFirstSearch {
                 blackVertexes.set(vertexIndex, true);
                 grayVertexes.set(vertexIndex, false);
                 whiteVertexes.set(vertexIndex, false);
+                System.out.println("black: "+vertexSet.get(vertexIndex));
                 parents.pop();
             }
-            System.out.println(vertexSet.get(vertexIndex) + " size: " + parents.size());
+            System.out.println(vertexSet.get(vertexIndex) + " size: " + parents.size() + "  time: " + time);
         }
     }
         /*

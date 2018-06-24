@@ -63,7 +63,7 @@ public class Graph {
             if (this.adjacencyList.get(index) == null) {
                 this.adjacencyList.set(index, new ArrayList<AdjacencyTuple>());
             }
-            this.adjacencyList.get(index).add(new AdjacencyTuple(edgeSet.get(i)[1], Integer.parseInt(edgeSet.get(i)[2])));
+            this.adjacencyList.get(index).add(new AdjacencyTuple(edgeSet.get(i)[1], Integer.parseInt(edgeSet.get(i)[2]), index));
         }
     }
 

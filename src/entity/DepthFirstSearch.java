@@ -6,20 +6,26 @@ import java.util.Stack;
 
 public class DepthFirstSearch {
 
-    private static Graph graph;
-    private static List<String> vertexSet;
-    private static List<Boolean> whiteVertexes;
-    private static List<Boolean> grayVertexes;
-    private static List<Boolean> blackVertexes;
-    private static List<TimeTuple> finishTime;
-    private static List<TimeTuple> discoveryTime;
-    private static List<List<AdjacencyTuple>> adjacencyList;
-    private static Stack<Integer> parents;
-    private static List<Integer> visited;
-    private static int time;
-    private static int pre;
+    private Graph graph;
+    private List<String> vertexSet;
+    private List<Boolean> whiteVertexes;
+    private List<Boolean> grayVertexes;
+    private List<Boolean> blackVertexes;
+    private List<TimeTuple> finishTime;
+    private List<TimeTuple> discoveryTime;
+    private List<List<AdjacencyTuple>> adjacencyList;
+    private Stack<Integer> parents;
+    private int time;
+    private GraphCharacteristicsEnum connectivity;
+    private GraphCharacteristicsEnum cycle;
 
-    private static void initializeDataStructures() {
+    public DepthFirstSearch() {
+        this.cycle = GraphCharacteristicsEnum.UNKNOWN_INFORMATION;
+        this.connectivity = GraphCharacteristicsEnum.UNKNOWN_INFORMATION;
+        this.cycle = GraphCharacteristicsEnum.UNKNOWN_INFORMATION;
+    }
+
+    private void initializeDataStructures() {
         for (String vertex : vertexSet) {
             whiteVertexes.add(true);
             grayVertexes.add(false);
@@ -29,128 +35,125 @@ public class DepthFirstSearch {
         }
     }
 
-    private static void instantiateObjects(Graph graph) {
-        finishTime = new ArrayList<TimeTuple>();
-        discoveryTime= new ArrayList<TimeTuple>();
-        whiteVertexes = new ArrayList<Boolean>();
-        grayVertexes = new ArrayList<Boolean>();
-        blackVertexes = new ArrayList<Boolean>();
-        parents = new Stack<Integer>();
-        visited = new ArrayList<Integer>();
-        adjacencyList = graph.getAdjacencyList();
-        vertexSet = graph.getVertexSet();
+    private void instantiateObjects(Graph graph) {
+        this.finishTime = new ArrayList<TimeTuple>();
+        this.discoveryTime= new ArrayList<TimeTuple>();
+        this.whiteVertexes = new ArrayList<Boolean>();
+        this.grayVertexes = new ArrayList<Boolean>();
+        this.blackVertexes = new ArrayList<Boolean>();
+        this.parents = new Stack<Integer>();
+        this.adjacencyList = graph.getAdjacencyList();
+        this.vertexSet = graph.getVertexSet();
     }
 
-    public static void ExecDepthFirstSearch(Graph graph) {
-        List<AdjacencyTuple> adjacencyVertexes;
-        int currentVertex = 0;
-        boolean occurrency = false;
+
+    public void ExecDepthFirstSearch(Graph graph) {
         time = 0;
+        int vertex = 0;
         instantiateObjects(graph);
         initializeDataStructures();
 
-        parents.push(currentVertex);
+        for (int i=0 ; i < graph.getVertexSet().size() ; ++i) {
+            if (whiteVertexes.get(i)) {
+                initDFS(i);
+                addVertexFinishTime(i, time);
+                setGraphConnectivity(graph,i);
+            }
+        }
+    }
+
+    private void setGraphConnectivity(Graph graph, int index) {
+        if (index < graph.getVertexSet().size()-1) {
+            this.connectivity = GraphCharacteristicsEnum.CONNECTED_GRAPH;
+        } else {
+            this.connectivity = GraphCharacteristicsEnum.NOT_CONNECTED_GRAPH;
+        }
+    }
+
+    private void setGraphCycle() {
+        this.cycle = GraphCharacteristicsEnum.HAS_CYCLE;
+    }
+
+    public void initDFS(int vertex) {
+        ++time;
+        boolean occurrency;
+        List<AdjacencyTuple> adjacencyVertexes;
+        changeToGray(vertex);
+        //System.out.print(vertexSet.get(vertex) + " - ");
+        addVertexDiscoveryTime(vertex, time);
+        this.parents.push(vertex);
+
         while (!parents.empty()) {
-            
-            currentVertex = parents.peek();
             occurrency = false;
-            
-            adjacencyVertexes = adjacencyList.get(currentVertex);
-            System.out.print(parents.size() + " " +vertexSet.get(currentVertex) + " - ");
-            
+            adjacencyVertexes = adjacencyList.get(vertex);
+            //System.out.println(parents);
+            //System.out.print(vertexSet.get(vertex) + " - ");
             if (adjacencyVertexes != null && adjacencyVertexes.size() > 0) {
-                whiteVertexes.set(currentVertex, false);
-                grayVertexes.set(currentVertex, true);
                 for (AdjacencyTuple tuple : adjacencyVertexes) {
-                    
-                    currentVertex = graph.mappingVertexToIndex(tuple.getVertex());
-                    
-                    if (whiteVertexes.get(currentVertex) && !blackVertexes.get(currentVertex)) {
-                        occurrency = true;
-                        grayVertexes.set(currentVertex, true);
-                        whiteVertexes.set(currentVertex, false);
+                    if (whiteVertexes.get(vertexSet.indexOf(tuple.getVertex()))) {
+                        vertex = vertexSet.indexOf(tuple.getVertex());
+                        changeToGray(vertex);
                         ++time;
-                        discoveryTime.add(new TimeTuple(vertexSet.get(currentVertex), time));
-                        System.out.println(vertexSet.get(currentVertex));
-                        parents.push(currentVertex);
+                        occurrency = true;
+                        //System.out.println(vertexSet.get(vertex));
+                        addVertexDiscoveryTime(vertex, time);
+                        this.parents.push(vertex);
+                        break;
+                    } else if (grayVertexes.get(vertexSet.indexOf(tuple.getVertex()))) {
+                        setGraphCycle();
                     }
                 }
             }
             if (!occurrency) {
+                changeToBlack(vertex);
+                this.parents.pop();
                 ++time;
-                blackVertexes.set(currentVertex, true);
-                grayVertexes.set(currentVertex, false);
-                whiteVertexes.set(currentVertex, false);
-                finishTime.add(new TimeTuple(vertexSet.get(currentVertex), time));
-                System.out.println("black: "+vertexSet.get(currentVertex));
-                parents.pop();
-            }
-            
-            //System.out.println(vertexSet.get(vertexIndex) + " size: " + parents.size() + "  time: " + time);
-        }
-    }
-        /*
-        vertexSet = graph.getVertexSet();
-        adjacencyList = graph.getAdjacencyList();
-        whiteVertexes = new ArrayList<Boolean>();
-        grayVertexes = new ArrayList<Boolean>();
-        blackVertexes = new ArrayList<Boolean>();
-        finishTime = new ArrayList<TimeTuple>();
-        discoveryTime= new ArrayList<TimeTuple>();
-        visiteds = new Stack<Integer>();
-        time = 0;
-
-        for (String vertex : vertexSet) {
-            whiteVertexes.add(true);
-            grayVertexes.add(false);
-            blackVertexes.add(false);
-            discoveryTime.add(null);
-            finishTime.add(null);
-        }
-        
-        int cardinality = vertexSet.size();
-        for (int vertex=0; vertex<cardinality; ++vertex) {
-            discoveryTime.set(0,new TimeTuple(vertexSet.get(0), time));
-            visiteds.push(0);
-            if (whiteVertexes.get(vertex)) {
-                dfsVisit(vertex);
+                addVertexFinishTime(vertex, time);
+                if (!parents.empty()) {
+                    vertex = parents.peek();
+                }
             }
         }
-        return;
     }
 
-    /*private static void dfsVisit(int vertexIndex) {
-        whiteVertexes.set(vertexIndex, false);
-        grayVertexes.set(vertexIndex, true);
-        List<AdjacencyTuple> adjacencyVertexes;
-        visiteds.push(vertexIndex);
-        int currentVertex;
+    public GraphCharacteristicsEnum hasCycle() {
+        return this.cycle;
+    }
 
+    private void addVertexDiscoveryTime(int vertex, int time) {
+        this.discoveryTime.add(new TimeTuple(vertexSet.get(vertex), time));
+    }
+
+    private void addVertexFinishTime(int vertex, int time) {
+        finishTime.add(new TimeTuple(vertexSet.get(vertex), time));
     }
     
-    private static void dfsVisit(int vertexIndex) {
-        whiteVertexes.set(vertexIndex, false);
-        List<AdjacencyTuple> adjacencyVertexes = adjacencyList.get(vertexIndex);
-        System.out.print(vertexSet.get(vertexIndex)+  " - ");
-        grayVertexes.set(vertexIndex, true);
+    private void changeToBlack(int vertex) {
+        this.blackVertexes.set(vertex, true);
+        this.whiteVertexes.set(vertex, false);
+        this.grayVertexes.set(vertex, false);
+    }
 
-        if (adjacencyVertexes.size() > 0) {
-            for (AdjacencyTuple tuple : adjacencyVertexes) {
-                for (int i=0;i<vertexSet.size(); i++) {
-                    if (tuple.getVertex().equals(vertexSet.get(i))) {
-                        vertexIndex = i;
+    private void changeToGray(int vertex) {
+        this.grayVertexes.set(vertex, true);
+        this.whiteVertexes.set(vertex, false);
+        this.blackVertexes.set(vertex, false);
+    }
+
+    public GraphCharacteristicsEnum getConnectivity() {
+        return this.connectivity;
+    }
+
+    public GraphCharacteristicsEnum searchVertex(String vertex) {
+        if (this.discoveryTime != null && this.discoveryTime.size() > 0) {
+            for (TimeTuple tuple : this.discoveryTime) {
+                if (tuple != null) {
+                    if (tuple.getVertex().equals(vertex)) {
+                        return GraphCharacteristicsEnum.VERTEX_FOUND;
                     }
-                }
-                if (whiteVertexes.get(vertexIndex)) {
-                    ++time;
-                    visiteds.push(vertexIndex);
-                    System.out.println(tuple.getVertex());
-                    discoveryTime.set(vertexIndex, new TimeTuple(vertexSet.get(vertexIndex), time));
-                    dfsVisit(vertexIndex);
                 }
             }
         }
-        blackVertexes.set(vertexIndex, true);
-        System.out.println("BOSTA: "+vertexSet.get(vertexIndex));
-    }*/
+        return GraphCharacteristicsEnum.VERTEX_NOT_FOUND;
+    }
 }

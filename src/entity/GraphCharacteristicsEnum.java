@@ -2,6 +2,7 @@ package entity;
 
 public enum GraphCharacteristicsEnum {
 
+    UNKNOWN_INFORMATION,
     CONNECTED_GRAPH,
     NOT_CONNECTED_GRAPH,
     SCATTERED_GRAPH,

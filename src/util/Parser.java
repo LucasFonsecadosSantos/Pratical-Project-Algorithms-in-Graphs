@@ -173,7 +173,7 @@ public class Parser {
                     }
                 }
             } else {
-                //LANÇAR EXCEÇÃO PARA ROW X, LEXEMA INVALIDO
+                //LANCAR EXCECAO PARA ROW X, LEXEMA INVALIDO
             }
         }
     }

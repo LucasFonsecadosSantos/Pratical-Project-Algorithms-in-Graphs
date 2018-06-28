@@ -6,6 +6,7 @@ import java.util.List;
 import util.Parser;
 import entity.DepthFirstSearch;
 import entity.Graph;
+import entity.TopologicalOrdering;
 import entity.GraphCharacteristicsEnum;
 import gui.Gui;
 
@@ -34,6 +35,7 @@ public class Main {
         for (String researchVertex : searchOperations) {
             Gui.printActionMessage(researchVertex + "->" +dfs.searchVertex(researchVertex));
         }
+        Gui.printInformationMessage(TopologicalOrdering.initTopologicalOrdering(dfs.getFinishTime(), dfs.hasCycle()));
         
         //System.out.println(graph.toString());
     }

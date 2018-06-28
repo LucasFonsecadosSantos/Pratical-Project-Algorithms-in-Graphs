@@ -20,9 +20,8 @@ public class DepthFirstSearch {
     private GraphCharacteristicsEnum cycle;
 
     public DepthFirstSearch() {
-        this.cycle = GraphCharacteristicsEnum.UNKNOWN_INFORMATION;
+        this.cycle = GraphCharacteristicsEnum.HAS_NO_CYCLE;
         this.connectivity = GraphCharacteristicsEnum.UNKNOWN_INFORMATION;
-        this.cycle = GraphCharacteristicsEnum.UNKNOWN_INFORMATION;
     }
 
     private void initializeDataStructures() {
@@ -30,8 +29,6 @@ public class DepthFirstSearch {
             whiteVertexes.add(true);
             grayVertexes.add(false);
             blackVertexes.add(false);
-            discoveryTime.add(null);
-            finishTime.add(null);
         }
     }
 
@@ -56,7 +53,7 @@ public class DepthFirstSearch {
         for (int i=0 ; i < graph.getVertexSet().size() ; ++i) {
             if (whiteVertexes.get(i)) {
                 initDFS(i);
-                addVertexFinishTime(i, time);
+                // addVertexFinishTime(i, time);
                 setGraphConnectivity(graph,i);
             }
         }
@@ -114,6 +111,10 @@ public class DepthFirstSearch {
                 }
             }
         }
+    }
+
+    public List<TimeTuple> getFinishTime() {
+        return this.finishTime;
     }
 
     public GraphCharacteristicsEnum hasCycle() {

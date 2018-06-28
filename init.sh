@@ -1,3 +1,4 @@
-javac src/**/*.java
-cd src/app
-java Main $1
+cd src/
+javac **/*.java
+java app/Main $1
+cd ../

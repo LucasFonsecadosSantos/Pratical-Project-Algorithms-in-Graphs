@@ -9,14 +9,24 @@ public class Graph {
     private int edgeSetCardinality;
     private List<String> vertexSet;
     private List<List<AdjacencyTuple>> adjacencyList;
+    private List<String[]> edgeSet;
 
     public Graph(List<String> vertexSet, List<String[]> edgeSet) {
         this.adjacencyList = new ArrayList<List<AdjacencyTuple>>();
         setVertexSet(vertexSet);
+        setEdgeSet(edgeSet);
         setVertexSetCardinality(vertexSet.size());
         setEdgeSetCardinality(edgeSet.size());
         adjacencyListInitialize();
         generateAdjacencyList(edgeSet);
+    }
+
+    public List getEdgeSet() {
+        return this.edgeSet;
+    }
+
+    public void setEdgeSet(List edgeSet) {
+        this.edgeSet = edgeSet;
     }
 
     public List getVertexSet() {
@@ -146,5 +156,14 @@ public class Graph {
 
     public List getAdjacencyList() {
         return this.adjacencyList;
+    }
+
+    public boolean searchVertex(String vertex) {
+        for (String vertexElement : this.vertexSet) {
+            if (vertex.equals(vertexElement)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
